@@ -1,0 +1,46 @@
+﻿<Window x:Class="SampleApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:draggableTreeView="clr-namespace:DraggableTreeView;assembly=DraggableTreeView"
+        xmlns:sampleApp="clr-namespace:SampleApp"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="500">
+    <Window.DataContext>
+        <sampleApp:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="25,5" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <draggableTreeView:DraggableTreeView Grid.Row="0" ItemsSource="{Binding Items}" AllowDrop="True"
+                                             BindableSelectedItem="{Binding SelectedItem}"
+                                             BindableSelectedGroup="{Binding SelectedGroup}">
+            <draggableTreeView:DraggableTreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </draggableTreeView:DraggableTreeView.ItemContainerStyle>
+            <draggableTreeView:DraggableTreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type sampleApp:ItemGroup}" ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type sampleApp:ItemEntry}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </draggableTreeView:DraggableTreeView.Resources>
+        </draggableTreeView:DraggableTreeView>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0">
+            <Button Content="New Item" Margin="0,0,10,0" Command="{Binding NewItemCommand}" />
+            <Button Content="New Group" Command="{Binding NewGroupCommand}" />
+        </StackPanel>
+    </Grid>
+</Window>
