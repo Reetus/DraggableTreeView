@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Authors>Reetus</Authors>
+    <PackageProjectUrl>https://github.com/Reetus/DraggableTreeView</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Reetus/DraggableTreeView</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
