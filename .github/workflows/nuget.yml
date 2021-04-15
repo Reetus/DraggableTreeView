@@ -28,3 +28,5 @@ jobs:
       uses: battila7/get-version-action@v2      
     - name: 'Pack'
       run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output output
+    - name: 'Push'
+      run: dotnet nuget push output\*.nupkg -k ${{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}      
