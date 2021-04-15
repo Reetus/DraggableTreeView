@@ -1,0 +1,30 @@
+name: Nuget
+
+on:
+  push:
+    tags:
+    - 'v*'
+env:
+  PROJECT_PATH: 'DraggableTreeView/DraggableTreeView.csproj'
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
+  
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    - name: Build
+      run: dotnet build --no-restore ${{ env.PROJECT_PATH }} --configuration Release
+    - name: 'Get Version'
+      id: version
+      uses: battila7/get-version-action@v2      
+    - name: 'Pack'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output output
