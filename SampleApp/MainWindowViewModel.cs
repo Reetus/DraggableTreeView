@@ -36,9 +36,11 @@ namespace SampleApp
 
         public ObservableCollection<IDraggable> Items { get; set; }
 
-        public ICommand NewGroupCommand => _newGroupCommand ??= new RelayCommand( NewGroup, o => true );
+        public ICommand NewGroupCommand =>
+            _newGroupCommand ?? ( _newGroupCommand = new RelayCommand( NewGroup, o => true ) );
 
-        public ICommand NewItemCommand => _newItemCommand ??= new RelayCommand( NewItem, o => true );
+        public ICommand NewItemCommand =>
+            _newItemCommand ?? ( _newItemCommand = new RelayCommand( NewItem, o => true ) );
 
         public IDraggableGroup SelectedGroup
         {

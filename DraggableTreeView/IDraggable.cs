@@ -2,6 +2,6 @@
 {
     public interface IDraggable
     {
-        public string Name { get; set; }
+        string Name { get; set; }
     }
 }
