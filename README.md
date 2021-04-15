@@ -1,6 +1,8 @@
 # WPF DraggableTreeView
 
-[![.NET](https://github.com/Reetus/DraggableTreeView/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Reetus/DraggableTreeView/actions/workflows/dotnet.yml)
+[![.NET](https://github.com/Reetus/DraggableTreeView/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Reetus/DraggableTreeView/actions/workflows/dotnet.yml) 
+[![Nuget](https://img.shields.io/nuget/v/DraggableTreeView?style=plastic)](https://www.nuget.org/packages/DraggableTreeView/)
+
 
 Based on https://www.codeproject.com/Articles/55168/Drag-and-Drop-Feature-in-WPF-TreeView-Control
 
