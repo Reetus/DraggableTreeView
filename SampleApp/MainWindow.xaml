@@ -23,7 +23,8 @@
         </Grid.RowDefinitions>
         <draggableTreeView:DraggableTreeView Grid.Row="0" ItemsSource="{Binding Items}" AllowDrop="True"
                                              BindableSelectedItem="{Binding SelectedItem}"
-                                             BindableSelectedGroup="{Binding SelectedGroup}">
+                                             BindableSelectedGroup="{Binding SelectedGroup}"
+                                             AllowDragGroups="False">
             <draggableTreeView:DraggableTreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="True" />
@@ -40,7 +41,9 @@
         </draggableTreeView:DraggableTreeView>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0">
             <Button Content="New Item" Margin="0,0,10,0" Command="{Binding NewItemCommand}" />
-            <Button Content="New Group" Command="{Binding NewGroupCommand}" />
+            <Button Content="New Group" Margin="0,0,10,0" Command="{Binding NewGroupCommand}" />
+            <Button Content="Select First" Margin="0,0,10,0" Command="{Binding SelectFirstCommand}" />
+            <Button Content="Select Last" Margin="0,0,10,0" Command="{Binding SelectLastCommand}" />
         </StackPanel>
     </Grid>
 </Window>

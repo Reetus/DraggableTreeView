@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using DraggableTreeView;
 
@@ -10,6 +11,8 @@ namespace SampleApp
         private ICommand _newItemCommand;
         private IDraggableGroup _selectedGroup;
         private IDraggable _selectedItem;
+        private ICommand _selectFirstCommand;
+        private ICommand _selectLastCommand;
 
         public MainWindowViewModel()
         {
@@ -54,6 +57,17 @@ namespace SampleApp
             set => SetProperty( ref _selectedItem, value );
         }
 
+        public ICommand SelectFirstCommand =>
+            _selectFirstCommand ?? ( _selectFirstCommand = new RelayCommand( SelectFirst, o => true ) );
+
+        public ICommand SelectLastCommand =>
+            _selectLastCommand ?? ( _selectLastCommand = new RelayCommand( SelectLast, o => true ) );
+
+        private void SelectFirst( object obj )
+        {
+            SelectedItem = Items.FirstOrDefault();
+        }
+
         private void NewGroup( object obj )
         {
             ObservableCollection<IDraggable> parent = GetParent();
@@ -78,6 +92,11 @@ namespace SampleApp
             }
 
             return parent;
+        }
+
+        private void SelectLast( object obj )
+        {
+            SelectedItem = Items.LastOrDefault();
         }
     }
 }

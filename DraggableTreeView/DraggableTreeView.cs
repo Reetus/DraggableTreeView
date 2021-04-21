@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -14,15 +15,15 @@ namespace DraggableTreeView
      */
     public class DraggableTreeView : TreeView
     {
-        public static readonly DependencyProperty BindableSelectedItemProperty =
-            DependencyProperty.RegisterAttached( nameof( BindableSelectedItem ), typeof( object ),
-                typeof( DraggableTreeView ),
-                new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault ) );
+        public static readonly DependencyProperty BindableSelectedItemProperty = DependencyProperty.RegisterAttached(
+            nameof( BindableSelectedItem ), typeof( object ), typeof( DraggableTreeView ),
+            new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnSelectedPropertyChanged ) );
 
-        public static readonly DependencyProperty BindableSelectedGroupProperty =
-            DependencyProperty.RegisterAttached( nameof( BindableSelectedGroup ), typeof( object ),
-                typeof( DraggableTreeView ),
-                new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault ) );
+        public static readonly DependencyProperty BindableSelectedGroupProperty = DependencyProperty.RegisterAttached(
+            nameof( BindableSelectedGroup ), typeof( object ), typeof( DraggableTreeView ),
+            new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnSelectedPropertyChanged ) );
 
         public static readonly DependencyProperty AllowDragGroupsProperty =
             DependencyProperty.RegisterAttached( nameof( AllowDragGroups ), typeof( bool ), typeof( DraggableTreeView ),
@@ -38,6 +39,7 @@ namespace DraggableTreeView
             MouseDown += OnMouseDown;
             Drop += OnDrop;
             SelectedItemChanged += OnSelectedItemChanged;
+            ItemContainerGenerator.StatusChanged += ItemContainerGeneratorOnStatusChanged;
         }
 
         public bool AllowDragGroups
@@ -56,6 +58,34 @@ namespace DraggableTreeView
         {
             get => (IDraggableEntry) GetValue( BindableSelectedItemProperty );
             set => SetValue( BindableSelectedItemProperty, value );
+        }
+
+        private void ItemContainerGeneratorOnStatusChanged( object sender, EventArgs e )
+        {
+            if ( ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated )
+            {
+                return;
+            }
+
+            var selectedItem = (IDraggable) BindableSelectedItem ?? BindableSelectedGroup;
+
+            if ( ItemContainerGenerator.ContainerFromItem( selectedItem ) is TreeViewItem item )
+            {
+                item.IsSelected = true;
+            }
+        }
+
+        private static void OnSelectedPropertyChanged( DependencyObject d, DependencyPropertyChangedEventArgs e )
+        {
+            if ( !( d is DraggableTreeView draggableTreeView ) )
+            {
+                return;
+            }
+
+            if ( draggableTreeView.ItemContainerGenerator.ContainerFromItem( e.NewValue ) is TreeViewItem tvi )
+            {
+                tvi.IsSelected = true;
+            }
         }
 
         private void OnSelectedItemChanged( object sender, RoutedPropertyChangedEventArgs<object> e )
