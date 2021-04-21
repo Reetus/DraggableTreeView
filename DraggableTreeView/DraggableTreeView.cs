@@ -24,6 +24,10 @@ namespace DraggableTreeView
                 typeof( DraggableTreeView ),
                 new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault ) );
 
+        public static readonly DependencyProperty AllowDragGroupsProperty =
+            DependencyProperty.RegisterAttached( nameof( AllowDragGroups ), typeof( bool ), typeof( DraggableTreeView ),
+                new PropertyMetadata( true ) );
+
         private IDraggable _draggedItem;
         private Point _lastMouseDown;
 
@@ -34,6 +38,12 @@ namespace DraggableTreeView
             MouseDown += OnMouseDown;
             Drop += OnDrop;
             SelectedItemChanged += OnSelectedItemChanged;
+        }
+
+        public bool AllowDragGroups
+        {
+            get => (bool) GetValue( AllowDragGroupsProperty );
+            set => SetValue( AllowDragGroupsProperty, value );
         }
 
         public IDraggableGroup BindableSelectedGroup
@@ -163,6 +173,11 @@ namespace DraggableTreeView
             }
 
             if ( !( SelectedItem is IDraggable ) )
+            {
+                return;
+            }
+
+            if ( !AllowDragGroups && SelectedItem is IDraggableGroup )
             {
                 return;
             }
