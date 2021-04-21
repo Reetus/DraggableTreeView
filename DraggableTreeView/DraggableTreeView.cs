@@ -14,15 +14,15 @@ namespace DraggableTreeView
      */
     public class DraggableTreeView : TreeView
     {
-        public static readonly DependencyProperty BindableSelectedItemProperty =
-            DependencyProperty.RegisterAttached( nameof( BindableSelectedItem ), typeof( object ),
-                typeof( DraggableTreeView ),
-                new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault ) );
+        public static readonly DependencyProperty BindableSelectedItemProperty = DependencyProperty.RegisterAttached(
+            nameof( BindableSelectedItem ), typeof( object ), typeof( DraggableTreeView ),
+            new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnSelectedPropertyChanged ) );
 
-        public static readonly DependencyProperty BindableSelectedGroupProperty =
-            DependencyProperty.RegisterAttached( nameof( BindableSelectedGroup ), typeof( object ),
-                typeof( DraggableTreeView ),
-                new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault ) );
+        public static readonly DependencyProperty BindableSelectedGroupProperty = DependencyProperty.RegisterAttached(
+            nameof( BindableSelectedGroup ), typeof( object ), typeof( DraggableTreeView ),
+            new FrameworkPropertyMetadata( default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnSelectedPropertyChanged ) );
 
         public static readonly DependencyProperty AllowDragGroupsProperty =
             DependencyProperty.RegisterAttached( nameof( AllowDragGroups ), typeof( bool ), typeof( DraggableTreeView ),
@@ -56,6 +56,19 @@ namespace DraggableTreeView
         {
             get => (IDraggableEntry) GetValue( BindableSelectedItemProperty );
             set => SetValue( BindableSelectedItemProperty, value );
+        }
+
+        private static void OnSelectedPropertyChanged( DependencyObject d, DependencyPropertyChangedEventArgs e )
+        {
+            if ( !( d is DraggableTreeView draggableTreeView ) )
+            {
+                return;
+            }
+
+            if ( draggableTreeView.ItemContainerGenerator.ContainerFromItem( e.NewValue ) is TreeViewItem tvi )
+            {
+                tvi.IsSelected = true;
+            }
         }
 
         private void OnSelectedItemChanged( object sender, RoutedPropertyChangedEventArgs<object> e )
