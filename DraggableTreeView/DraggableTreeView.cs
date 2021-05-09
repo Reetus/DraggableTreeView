@@ -188,33 +188,37 @@ namespace DraggableTreeView
 
         private void OnMouseMove( object sender, MouseEventArgs e )
         {
-            if ( e.LeftButton != MouseButtonState.Pressed )
+            Dispatcher.Invoke( () =>
             {
-                return;
-            }
+                if ( e.LeftButton != MouseButtonState.Pressed )
+                {
+                    return;
+                }
 
-            var currentPosition = e.GetPosition( this );
+                var currentPosition = e.GetPosition( this );
 
-            if ( !( Math.Abs( currentPosition.X - _lastMouseDown.X ) >
-                    SystemParameters.MinimumHorizontalDragDistance ) &&
-                 !( Math.Abs( currentPosition.Y - _lastMouseDown.Y ) > SystemParameters.MinimumVerticalDragDistance ) )
-            {
-                return;
-            }
+                if ( !( Math.Abs( currentPosition.X - _lastMouseDown.X ) >
+                        SystemParameters.MinimumHorizontalDragDistance ) &&
+                     !( Math.Abs( currentPosition.Y - _lastMouseDown.Y ) >
+                        SystemParameters.MinimumVerticalDragDistance ) )
+                {
+                    return;
+                }
 
-            if ( !( SelectedItem is IDraggable ) )
-            {
-                return;
-            }
+                if ( !( SelectedItem is IDraggable ) )
+                {
+                    return;
+                }
 
-            if ( !AllowDragGroups && SelectedItem is IDraggableGroup )
-            {
-                return;
-            }
+                if ( !AllowDragGroups && SelectedItem is IDraggableGroup )
+                {
+                    return;
+                }
 
-            _draggedItem = (IDraggable) SelectedItem;
+                _draggedItem = (IDraggable) SelectedItem;
 
-            DragDrop.DoDragDrop( this, SelectedValue, DragDropEffects.Move );
+                DragDrop.DoDragDrop( this, SelectedValue, DragDropEffects.Move );
+            } );
         }
 
         private static TreeViewItem GetNearestContainer( UIElement element )
